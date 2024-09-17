@@ -44,7 +44,7 @@ public class SQLiteConfig {
     /* Date storage class*/
     public final static String DEFAULT_DATE_STRING_FORMAT = "yyyy-MM-dd";
     public final static String DEFAULT_TIME_STRING_FORMAT = "HH:mm:ss";
-    public final static String DEFAULT_TIMESTAMP_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    public final static String DEFAULT_TIMESTAMP_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /* Default limits used by SQLite: https://www.sqlite.org/limits.html */
     private static final int DEFAULT_MAX_LENGTH = 1000000000;
     private static final int DEFAULT_MAX_COLUMN = 2000;
@@ -549,7 +549,7 @@ public class SQLiteConfig {
                 null),
         TIMESTAMP_STRING_FORMAT(
                 "timestamp_string_format",
-                "Format to store and retrieve dates stored as text. Defaults to \"yyyy-MM-dd HH:mm:ss.SSS\"",
+                "Format to store and retrieve dates stored as text. Defaults to \"yyyy-MM-dd HH:mm:ss\"",
                 null),
         BUSY_TIMEOUT(
                 "busy_timeout",
