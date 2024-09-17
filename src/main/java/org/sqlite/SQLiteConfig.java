@@ -42,7 +42,9 @@ import java.util.TreeSet;
  */
 public class SQLiteConfig {
     /* Date storage class*/
-    public static final String DEFAULT_DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    public final static String DEFAULT_DATE_STRING_FORMAT = "yyyy-MM-dd";
+    public final static String DEFAULT_TIME_STRING_FORMAT = "HH:mm:ss";
+    public final static String DEFAULT_TIMESTAMP_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     /* Default limits used by SQLite: https://www.sqlite.org/limits.html */
     private static final int DEFAULT_MAX_LENGTH = 1000000000;
     private static final int DEFAULT_MAX_COLUMN = 2000;
@@ -170,6 +172,8 @@ public class SQLiteConfig {
         pragmaParams.remove(Pragma.DATE_PRECISION.pragmaName);
         pragmaParams.remove(Pragma.DATE_CLASS.pragmaName);
         pragmaParams.remove(Pragma.DATE_STRING_FORMAT.pragmaName);
+        pragmaParams.remove(Pragma.TIME_STRING_FORMAT.pragmaName);
+        pragmaParams.remove(Pragma.TIMESTAMP_STRING_FORMAT.pragmaName);
         pragmaParams.remove(Pragma.PASSWORD.pragmaName);
         pragmaParams.remove(Pragma.HEXKEY_MODE.pragmaName);
         pragmaParams.remove(Pragma.LIMIT_ATTACHED.pragmaName);
@@ -328,6 +332,12 @@ public class SQLiteConfig {
         pragmaTable.setProperty(
                 Pragma.DATE_STRING_FORMAT.pragmaName,
                 defaultConnectionConfig.getDateStringFormat());
+        pragmaTable.setProperty(
+                Pragma.TIME_STRING_FORMAT.pragmaName,
+                defaultConnectionConfig.getTimeStringFormat());
+        pragmaTable.setProperty(
+                Pragma.TIMESTAMP_STRING_FORMAT.pragmaName,
+                defaultConnectionConfig.getTimestampStringFormat());
         pragmaTable.setProperty(
                 Pragma.JDBC_EXPLICIT_READONLY.pragmaName, this.explicitReadOnly ? "true" : "false");
         return pragmaTable;
@@ -531,6 +541,14 @@ public class SQLiteConfig {
                 toStringArray(DateClass.values())),
         DATE_STRING_FORMAT(
                 "date_string_format",
+                "Format to store and retrieve dates stored as text. Defaults to \"yyyy-MM-dd\"",
+                null),
+        TIME_STRING_FORMAT(
+                "time_string_format",
+                "Format to store and retrieve dates stored as text. Defaults to \"HH:mm:ss\"",
+                null),
+        TIMESTAMP_STRING_FORMAT(
+                "timestamp_string_format",
                 "Format to store and retrieve dates stored as text. Defaults to \"yyyy-MM-dd HH:mm:ss.SSS\"",
                 null),
         BUSY_TIMEOUT(

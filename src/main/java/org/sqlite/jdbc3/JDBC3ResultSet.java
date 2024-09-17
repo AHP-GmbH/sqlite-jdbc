@@ -379,7 +379,7 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                 }
                 try {
                     return new Time(
-                            getConnectionConfig().getDateFormat().parse(dateText).getTime());
+                            getConnectionConfig().getTimeFormat().parse(dateText).getTime());
                 } catch (Exception e) {
                     throw new SQLException("Error parsing time", e);
                 }
@@ -407,7 +407,7 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                 try {
                     FastDateFormat dateFormat =
                             FastDateFormat.getInstance(
-                                    getConnectionConfig().getDateStringFormat(), cal.getTimeZone());
+                                    getConnectionConfig().getTimeStringFormat(), cal.getTimeZone());
 
                     return new Time(dateFormat.parse(dateText).getTime());
                 } catch (Exception e) {
@@ -447,7 +447,7 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                 }
                 try {
                     return new Timestamp(
-                            getConnectionConfig().getDateFormat().parse(dateText).getTime());
+                            getConnectionConfig().getTimestampFormat().parse(dateText).getTime());
                 } catch (Exception e) {
                     throw new SQLException("Error parsing time stamp", e);
                 }
@@ -476,7 +476,7 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                 try {
                     FastDateFormat dateFormat =
                             FastDateFormat.getInstance(
-                                    getConnectionConfig().getDateStringFormat(), cal.getTimeZone());
+                                    getConnectionConfig().getTimestampStringFormat(), cal.getTimeZone());
 
                     return new Timestamp(dateFormat.parse(dateText).getTime());
                 } catch (Exception e) {

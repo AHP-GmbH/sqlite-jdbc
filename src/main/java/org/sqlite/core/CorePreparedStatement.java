@@ -114,7 +114,7 @@ public abstract class CorePreparedStatement extends JDBC4Statement {
                 batch(
                         pos,
                         FastDateFormat.getInstance(
-                                        config.getDateStringFormat(), calendar.getTimeZone())
+                                        config.getTimestampStringFormat(), calendar.getTimeZone())
                                 .format(new Date(value)));
                 break;
 
