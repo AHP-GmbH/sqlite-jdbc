@@ -344,8 +344,15 @@ public abstract class JDBC3PreparedStatement extends CorePreparedStatement {
     public void setObject(int pos, Object value) throws SQLException {
         if (value == null) {
             batch(pos, null);
+        } else if (value instanceof Date) {
+            setDateByMilliseconds(pos, ((Date) value).getTime(), Calendar.getInstance());
+        } else if (value instanceof Time) {
+            setTimeByMilliseconds(pos, ((Time) value).getTime(), Calendar.getInstance());
+        } else if (value instanceof Timestamp) {
+            setTimestampByMilliseconds(pos, ((Timestamp) value).getTime(), Calendar.getInstance());
         } else if (value instanceof java.util.Date) {
-            setDateByMilliseconds(pos, ((java.util.Date) value).getTime(), Calendar.getInstance());
+            // use timestamp as default format
+            setTimestampByMilliseconds(pos, ((java.util.Date) value).getTime(), Calendar.getInstance());
         } else if (value instanceof Long) {
             batch(pos, value);
         } else if (value instanceof Integer) {
@@ -431,7 +438,7 @@ public abstract class JDBC3PreparedStatement extends CorePreparedStatement {
         if (x == null) {
             setObject(pos, null);
         } else {
-            setDateByMilliseconds(pos, x.getTime(), cal);
+            setTimeByMilliseconds(pos, x.getTime(), cal);
         }
     }
 
@@ -445,7 +452,7 @@ public abstract class JDBC3PreparedStatement extends CorePreparedStatement {
         if (x == null) {
             setObject(pos, null);
         } else {
-            setDateByMilliseconds(pos, x.getTime(), cal);
+            setTimestampByMilliseconds(pos, x.getTime(), cal);
         }
     }
 

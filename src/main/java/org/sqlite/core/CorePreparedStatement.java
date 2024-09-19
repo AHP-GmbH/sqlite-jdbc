@@ -114,6 +114,52 @@ public abstract class CorePreparedStatement extends JDBC4Statement {
                 batch(
                         pos,
                         FastDateFormat.getInstance(
+                                        config.getDateStringFormat(), calendar.getTimeZone())
+                                .format(new Date(value)));
+                break;
+
+            case REAL:
+                // long to Julian date
+                batch(pos, new Double((value / 86400000.0) + 2440587.5));
+                break;
+
+            default: // INTEGER:
+                batch(pos, new Long(value / config.getDateMultiplier()));
+        }
+    }
+
+    /** Store the time in the user's preferred format (text, int, or real) */
+    protected void setTimeByMilliseconds(int pos, Long value, Calendar calendar)
+            throws SQLException {
+        SQLiteConnectionConfig config = conn.getConnectionConfig();
+        switch (config.getDateClass()) {
+            case TEXT:
+                batch(
+                        pos,
+                        FastDateFormat.getInstance(
+                                        config.getTimeStringFormat(), calendar.getTimeZone())
+                                .format(new Date(value)));
+                break;
+
+            case REAL:
+                // long to Julian date
+                batch(pos, new Double((value / 86400000.0) + 2440587.5));
+                break;
+
+            default: // INTEGER:
+                batch(pos, new Long(value / config.getDateMultiplier()));
+        }
+    }
+
+    /** Store the timestamp in the user's preferred format (text, int, or real) */
+    protected void setTimestampByMilliseconds(int pos, Long value, Calendar calendar)
+            throws SQLException {
+        SQLiteConnectionConfig config = conn.getConnectionConfig();
+        switch (config.getDateClass()) {
+            case TEXT:
+                batch(
+                        pos,
+                        FastDateFormat.getInstance(
                                         config.getTimestampStringFormat(), calendar.getTimeZone())
                                 .format(new Date(value)));
                 break;
