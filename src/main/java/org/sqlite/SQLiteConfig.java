@@ -28,6 +28,7 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -44,7 +45,23 @@ public class SQLiteConfig {
     /* Date storage class*/
     public final static String DEFAULT_DATE_STRING_FORMAT = "yyyy-MM-dd";
     public final static String DEFAULT_TIME_STRING_FORMAT = "HH:mm:ss";
-    public final static String DEFAULT_TIMESTAMP_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    public final static String DEFAULT_TIMESTAMP_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * the offset to compute the milliseconds (as described by the Timestamp-class) of a time value in Uniface format (date part equals 1900-01-01)
+     */
+    public static final long UNIFACE_TIME_MILLIS_OFFSET = Date.valueOf("1900-01-01").getTime() - Date.valueOf("1970-01-01").getTime();
+
+    /**
+     * Checks if the milliseconds (as described by the Timestamp-class) describes a time in Uniface format (i.e. the date part equals 1900-01-01).
+     *
+     * @param millis milliseconds since 1970-01-01
+     * @return if the date part equals 1900-01-01
+     */
+    public static boolean isUnifaceTime(final long millis) {
+        return millis >= UNIFACE_TIME_MILLIS_OFFSET && millis < UNIFACE_TIME_MILLIS_OFFSET + 86_400_000L;
+    }
+
     /* Default limits used by SQLite: https://www.sqlite.org/limits.html */
     private static final int DEFAULT_MAX_LENGTH = 1000000000;
     private static final int DEFAULT_MAX_COLUMN = 2000;

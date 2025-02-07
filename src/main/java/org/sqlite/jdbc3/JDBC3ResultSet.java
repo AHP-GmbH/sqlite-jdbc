@@ -20,6 +20,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.sqlite.SQLiteConfig;
 import org.sqlite.core.CoreResultSet;
 import org.sqlite.core.CoreStatement;
 import org.sqlite.core.DB;
@@ -446,8 +448,14 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                     return null;
                 }
                 try {
-                    return new Timestamp(
-                            getConnectionConfig().getTimestampFormat().parse(dateText).getTime());
+                    if (dateText.length() == 8) {
+                        // it is saved in time-format => convert time value to timestamp with date part equal to 1900-01-01
+                        return new Timestamp(
+                                getConnectionConfig().getTimeFormat().parse(dateText).getTime() + SQLiteConfig.UNIFACE_TIME_MILLIS_OFFSET);
+                    } else {
+                        return new Timestamp(
+                                getConnectionConfig().getTimestampFormat().parse(dateText).getTime());
+                    }
                 } catch (Exception e) {
                     throw new SQLException("Error parsing time stamp", e);
                 }
@@ -474,11 +482,18 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                     return null;
                 }
                 try {
-                    FastDateFormat dateFormat =
-                            FastDateFormat.getInstance(
-                                    getConnectionConfig().getTimestampStringFormat(), cal.getTimeZone());
-
-                    return new Timestamp(dateFormat.parse(dateText).getTime());
+                    if (dateText.length() == 8) {
+                        // it is saved in time-format => convert time value to timestamp with date part equal to 1900-01-01
+                        FastDateFormat dateFormat =
+                                FastDateFormat.getInstance(
+                                        getConnectionConfig().getTimeStringFormat(), cal.getTimeZone());
+                        return new Timestamp(dateFormat.parse(dateText).getTime() + SQLiteConfig.UNIFACE_TIME_MILLIS_OFFSET);
+                    } else {
+                        FastDateFormat dateFormat =
+                                FastDateFormat.getInstance(
+                                        getConnectionConfig().getTimestampStringFormat(), cal.getTimeZone());
+                        return new Timestamp(dateFormat.parse(dateText).getTime());
+                    }
                 } catch (Exception e) {
                     throw new SQLException("Error parsing time stamp", e);
                 }
