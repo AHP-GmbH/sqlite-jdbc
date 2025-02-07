@@ -159,9 +159,10 @@ public abstract class CorePreparedStatement extends JDBC4Statement {
         SQLiteConnectionConfig config = conn.getConnectionConfig();
         switch (config.getDateClass()) {
             case TEXT:
-                if (SQLiteConfig.isUnifaceTime(value)) {
+                if (value != null && SQLiteConfig.isUnifaceTime(value)) {
                     // Date part of timestamp equals 1900-01-01 => save it in time- instead of timestamp-format
-                    setTimeByMilliseconds(pos, value - SQLiteConfig.UNIFACE_TIME_MILLIS_OFFSET, calendar);
+                    long m = SQLiteConfig.unifaceTimestampToTime(value);
+                    setTimeByMilliseconds(pos, m, calendar);
                     return;
                 }
                 batch(

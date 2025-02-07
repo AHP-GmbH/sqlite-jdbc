@@ -448,10 +448,10 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                     return null;
                 }
                 try {
-                    if (dateText.length() == 8) {
+                    if (dateText != null && dateText.length() == 8) {
                         // it is saved in time-format => convert time value to timestamp with date part equal to 1900-01-01
-                        return new Timestamp(
-                                getConnectionConfig().getTimeFormat().parse(dateText).getTime() + SQLiteConfig.UNIFACE_TIME_MILLIS_OFFSET);
+                        long m = getConnectionConfig().getTimeFormat().parse(dateText).getTime();
+                        return new Timestamp(SQLiteConfig.timeToUnifaceTimestamp(m));
                     } else {
                         return new Timestamp(
                                 getConnectionConfig().getTimestampFormat().parse(dateText).getTime());
@@ -482,12 +482,13 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                     return null;
                 }
                 try {
-                    if (dateText.length() == 8) {
+                    if (dateText != null && dateText.length() == 8) {
                         // it is saved in time-format => convert time value to timestamp with date part equal to 1900-01-01
                         FastDateFormat dateFormat =
                                 FastDateFormat.getInstance(
                                         getConnectionConfig().getTimeStringFormat(), cal.getTimeZone());
-                        return new Timestamp(dateFormat.parse(dateText).getTime() + SQLiteConfig.UNIFACE_TIME_MILLIS_OFFSET);
+                        long m = dateFormat.parse(dateText).getTime();
+                        return new Timestamp(SQLiteConfig.timeToUnifaceTimestamp(m));
                     } else {
                         FastDateFormat dateFormat =
                                 FastDateFormat.getInstance(

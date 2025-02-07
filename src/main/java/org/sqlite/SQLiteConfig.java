@@ -28,7 +28,7 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -48,18 +48,40 @@ public class SQLiteConfig {
     public final static String DEFAULT_TIMESTAMP_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * the offset to compute the milliseconds (as described by the Timestamp-class) of a time value in Uniface format (date part equals 1900-01-01)
-     */
-    public static final long UNIFACE_TIME_MILLIS_OFFSET = Date.valueOf("1900-01-01").getTime() - Date.valueOf("1970-01-01").getTime();
-
-    /**
      * Checks if the milliseconds (as described by the Timestamp-class) describes a time in Uniface format (i.e. the date part equals 1900-01-01).
      *
      * @param millis milliseconds since 1970-01-01
      * @return if the date part equals 1900-01-01
      */
     public static boolean isUnifaceTime(final long millis) {
-        return millis >= UNIFACE_TIME_MILLIS_OFFSET && millis < UNIFACE_TIME_MILLIS_OFFSET + 86_400_000L;
+        final Timestamp timestamp = new Timestamp(millis);
+        return timestamp.toString().startsWith("1900-01-01");
+    }
+
+    /**
+     * Converts the milliseconds of an uniface timestamp into those needed to save it as a time.
+     *
+     * @param millis milliseconds of an uniface timestamp
+     * @return milliseconds for an equivalent time
+     */
+    public static long unifaceTimestampToTime(final long millis) {
+        final Timestamp timestamp = new Timestamp(millis);
+        final String s = timestamp.toString().substring(11, 19);
+        final String s2 = "1970-01-01 " + s;
+        return Timestamp.valueOf(s2).getTime();
+    }
+
+    /**
+     * Converts the milliseconds of a time into those of an uniface timestamp.
+     *
+     * @param millis milliseconds of a time
+     * @return milliseconds for an equivalent uniface timestamp
+     */
+    public static long timeToUnifaceTimestamp(final long millis) {
+        final Timestamp timestamp = new Timestamp(millis);
+        final String s = timestamp.toString().substring(11, 19);
+        final String s2 = "1900-01-01 " + s;
+        return Timestamp.valueOf(s2).getTime();
     }
 
     /* Default limits used by SQLite: https://www.sqlite.org/limits.html */
